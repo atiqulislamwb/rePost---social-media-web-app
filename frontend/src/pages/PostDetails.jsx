@@ -16,7 +16,7 @@ const PostDetails = () => {
   const [comment, setComment] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const { user, BASE_URL } = useContext(StateContext);
+  const { user, BASE_URL, userFromDb } = useContext(StateContext);
   const { id } = useParams();
 
   const { data, isLoading, isError, error, refetch } = useQuery({
@@ -52,9 +52,9 @@ const PostDetails = () => {
 
   const handleComment = () => {
     const information = {
-      name: user?.displayName,
-      email: user?.email,
-      photo: user?.photoURL,
+      name: userFromDb?.name,
+      email: userFromDb?.email,
+      photo: userFromDb?.imgUrl,
       post_id: id,
       comment,
       createdAt: new Date(),
@@ -242,8 +242,8 @@ const PostDetails = () => {
         <div className="">
           <div className="flex items-center r gap-1 mt-2">
             <img
-              src={user?.photoURL}
-              alt={user?.displayName}
+              src={userFromDb?.imgUrl}
+              alt={userFromDb?.name}
               className="w-10 h-10 object-contain rounded-full "
             />
             <div className="w-[90%]">
@@ -263,7 +263,20 @@ const PostDetails = () => {
                 onClick={handleComment}
                 className="w-full p-[9px] cursor-pointer hover:bg-slate-300 transition duration-300 font-semibold text-sm bg-slate-200 rounded-full text"
               >
-                Comment
+                {loading ? (
+                  <div className="flex">
+                    <p>
+                      {" "}
+                      <svg
+                        className="animate-spin border-dashed  h-6 w-6 mr-3 border-blue-500 border-2 rounded-full "
+                        viewBox="0 0 24 24"
+                      ></svg>
+                    </p>
+                    <p>Comment</p>
+                  </div>
+                ) : (
+                  "Comment"
+                )}
               </button>
             </div>
           </div>
